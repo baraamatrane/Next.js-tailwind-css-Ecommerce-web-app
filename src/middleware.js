@@ -6,15 +6,15 @@ export function middleware(request) {
   // Extract cookie from the request headers
   const token =
     request.headers?.get("token") ||
-    request.cookies?.get("token") ||
-    request.headers?.cookies?.get("token");
+    request?.cookies?.get("token") ||
+    request?.headers?.cookies?.get("token");
   // Check if the user is authenticated but trying to access "/Signin" or "/Register"
   if (
     (request.nextUrl.pathname === "/Signin" ||
       request.nextUrl.pathname === "/Register") &&
     token
   ) {
-    return NextResponse.redirect(request.headers.get("host"));
+    return NextResponse.redirect(request.headers?.get("host"));
   }
   if (
     (request.nextUrl.pathname === "/User/Account" ||
@@ -24,7 +24,7 @@ export function middleware(request) {
       request.nextUrl.pathname === "/Checkout") &&
     !token
   ) {
-    return NextResponse.redirect(`${request.headers.get("host")}/Signin`);
+    return NextResponse.redirect(`${request.headers?.get("host")}/Signin`);
   }
 
   // If none of the above conditions are met, allow the request to proceed
