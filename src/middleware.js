@@ -4,7 +4,10 @@ export function middleware(request) {
   const referer = request.headers.get("Referer");
 
   // Extract cookie from the request headers
-  const token = request.headers.get("token");
+  const token =
+    request.headers.get("token") ||
+    request.cookies.get("token") ||
+    request.headers.cookies.get("token");
   console.log(request.headers.get("token"));
   // Check if the user is authenticated but trying to access "/Signin" or "/Register"
   if (
