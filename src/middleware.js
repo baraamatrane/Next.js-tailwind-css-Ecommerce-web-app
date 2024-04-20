@@ -5,10 +5,9 @@ export function middleware(request) {
 
   // Extract cookie from the request headers
   const token =
-    request.headers.get("token") ||
-    request.cookies.get("token") ||
-    request.headers.cookies.get("token");
-  console.log(request.headers.get("token"));
+    request.headers?.get("token") ||
+    request.cookies?.get("token") ||
+    request.headers?.cookies?.get("token");
   // Check if the user is authenticated but trying to access "/Signin" or "/Register"
   if (
     (request.nextUrl.pathname === "/Signin" ||
