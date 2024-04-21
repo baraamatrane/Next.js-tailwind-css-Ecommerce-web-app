@@ -11,13 +11,20 @@ export function middleware(request) {
       .find((c) => c.trim().startsWith("token="))
       ?.split("=")[1] || request.cookies?.token;
 
+  // Get the host from the request headers
+  const host = request.headers.get("host");
+
+  // Construct absolute redirect URLs
+  const signinRedirectUrl = `https://${host}/Signin`;
+  const homeRedirectUrl = `https://${host}`;
+
   // Check if the user is authenticated but trying to access "/Signin" or "/Register"
   if (
     (request.nextUrl.pathname === "/Signin" ||
       request.nextUrl.pathname === "/Register") &&
     token
   ) {
-    return NextResponse.redirect(request.headers.get("host"));
+    return NextResponse.redirect(homeRedirectUrl);
   }
 
   // Check if the user is not authenticated but trying to access certain routes
@@ -29,7 +36,7 @@ export function middleware(request) {
       request.nextUrl.pathname === "/Checkout") &&
     !token
   ) {
-    return NextResponse.redirect(`${request.headers.get("host")}/Signin`);
+    return NextResponse.redirect(signinRedirectUrl);
   }
 
   // If none of the above conditions are met, allow the request to proceed
