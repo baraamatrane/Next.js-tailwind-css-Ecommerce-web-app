@@ -33,7 +33,7 @@ export async function middleware(request) {
   if (
     (request.nextUrl.pathname === "/Signin" ||
       request.nextUrl.pathname === "/Register") &&
-    user
+    !user
   ) {
     return NextResponse.redirect(homeRedirectUrl);
   }
@@ -45,7 +45,7 @@ export async function middleware(request) {
       request.nextUrl.pathname === "/User/Wishlist" ||
       request.nextUrl.pathname === "/User/ChangePassword" ||
       request.nextUrl.pathname === "/Checkout") &&
-    !user
+    user
   ) {
     return NextResponse.redirect(signinRedirectUrl);
   }
