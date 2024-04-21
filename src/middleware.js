@@ -1,31 +1,9 @@
 import { NextResponse } from "next/server";
 
-export async function middleware(request) {
-  // Function to fetch token information
-  const Token = async () => {
-    try {
-      const res = await fetch(
-        `https://baraa-ecom.onrender.com/user/information`,
-        {
-          credentials: "include",
-        }
-      );
-      const data = await res.json();
-      return data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  // Fetch token information
-  const tokenData = await Token();
-
-  // Extract token from the request headers or cookies
-  const user = tokenData?.user;
+export function middleware(request) {
   const host = request.headers.get("host");
-
-  // Construct absolute redirect URLs
-  console.log(user);
+  const token = request.cookies.get("token");
+  console.log(token);
   const signinRedirectUrl = `https://${host}/Signin`;
   const homeRedirectUrl = `https://${host}`;
 
@@ -33,7 +11,7 @@ export async function middleware(request) {
   if (
     (request.nextUrl.pathname === "/Signin" ||
       request.nextUrl.pathname === "/Register") &&
-    !user
+    token
   ) {
     return NextResponse.redirect(homeRedirectUrl);
   }
@@ -45,7 +23,7 @@ export async function middleware(request) {
       request.nextUrl.pathname === "/User/Wishlist" ||
       request.nextUrl.pathname === "/User/ChangePassword" ||
       request.nextUrl.pathname === "/Checkout") &&
-    user
+    !token
   ) {
     return NextResponse.redirect(signinRedirectUrl);
   }
