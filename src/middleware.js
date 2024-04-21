@@ -5,11 +5,9 @@ export function middleware(request) {
 
   // Extract token from the request headers or cookies
   const token =
-    request.headers
-      .get("cookie")
-      ?.split(";")
-      .find((c) => c.trim().startsWith("token="))
-      ?.split("=")[1] || request.cookies?.token;
+    request.headers.get("token") ||
+    request.cookies.get("token") ||
+    request.headers?.cookies?.get("token");
 
   // Get the host from the request headers
   const host = request.headers.get("host");
