@@ -1,15 +1,27 @@
 import { NextResponse } from "next/server";
 
-export function middleware(request) {
-  const referer = request.headers.get("Referer");
+export async function middleware(request) {
+  // Function to fetch token information
+  const Token = async () => {
+    try {
+      const res = await fetch(
+        `https://baraa-ecom.onrender.com/user/information`,
+        {
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // Fetch token information
+  const tokenData = await Token();
 
   // Extract token from the request headers or cookies
-  const token =
-    request.headers.get("token") ||
-    request.cookies.get("token") ||
-    request.headers?.cookies?.get("token");
-
-  // Get the host from the request headers
+  const user = tokenData?.user;
   const host = request.headers.get("host");
 
   // Construct absolute redirect URLs
@@ -20,7 +32,7 @@ export function middleware(request) {
   if (
     (request.nextUrl.pathname === "/Signin" ||
       request.nextUrl.pathname === "/Register") &&
-    token
+    user
   ) {
     return NextResponse.redirect(homeRedirectUrl);
   }
@@ -32,7 +44,7 @@ export function middleware(request) {
       request.nextUrl.pathname === "/User/Wishlist" ||
       request.nextUrl.pathname === "/User/ChangePassword" ||
       request.nextUrl.pathname === "/Checkout") &&
-    !token
+    !user
   ) {
     return NextResponse.redirect(signinRedirectUrl);
   }
