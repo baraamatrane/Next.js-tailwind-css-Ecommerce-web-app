@@ -25,6 +25,7 @@ export async function middleware(request) {
   const host = request.headers.get("host");
 
   // Construct absolute redirect URLs
+  console.log(user);
   const signinRedirectUrl = `https://${host}/Signin`;
   const homeRedirectUrl = `https://${host}`;
 
